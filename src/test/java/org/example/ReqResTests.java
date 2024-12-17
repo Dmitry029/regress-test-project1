@@ -1,15 +1,25 @@
 package org.example;
 
+import io.qameta.allure.Feature;
 import org.example.config.AtConfig;
+import org.example.models.DataForCreateUser;
 import org.example.models.User;
+import org.example.models.UserWithJob;
 import org.example.service.ReqResService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.stream.Stream;
 
+import static org.junit.jupiter.params.provider.Arguments.of;
+
+@Feature("Тестовое задание Костюченко Д")
 @SpringBootTest(classes = AtConfig.class)
 public class ReqResTests {
 
@@ -18,16 +28,27 @@ public class ReqResTests {
 
     @Test
     @DisplayName("Проверка, что поля 'email', 'lastName' для всех User из списка - not null")
-    void getUsersPage() {
+    void checkUsersData() {
         int page = 2;
-        List<User> users = reqResService.getUsersPage(page);
-        reqResService.checkEmailFieldIsNotNull(users)
+        List<User> users = reqResService.getUsers(page);
+        reqResService
+                .checkEmailFieldIsNotNull(users)
                 .checkLastNameFieldIsNotNull(users);
     }
 
-    /*@ParameterizedTest(name = "Создание пользователя - {index}")
-    @MethodSource("path-to-method")
-    void createUser(*//*User user*//*) {
-        // вызвать метод ReqResService через инжектированную переменную для отправки POST запроса
-    }*/
+    @ParameterizedTest(name = "Создание пользователя - {0} и проверка правильности заполнения полей")
+    @MethodSource("provideDataForCreateUser")
+    void createUser(DataForCreateUser data) {
+        UserWithJob user = reqResService.getUserWithJob(data);
+        reqResService
+                .checkUserName(data, user)
+                .checkUserJob(data, user);
+    }
+
+    private static Stream<Arguments> provideDataForCreateUser() {
+        return Stream.of(
+                of(new DataForCreateUser("John", "driver")),
+                of(new DataForCreateUser("Mike", "builder"))
+        );
+    }
 }

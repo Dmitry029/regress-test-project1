@@ -1,14 +1,18 @@
 package org.example.service;
 
 import io.qameta.allure.Step;
+import io.restassured.common.mapper.TypeRef;
 import org.assertj.core.api.SoftAssertions;
+import org.example.models.DataForCreateUser;
 import org.example.models.User;
+import org.example.models.UserWithJob;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Service
 public class ReqResService {
@@ -20,7 +24,7 @@ public class ReqResService {
     private String usersEndpoint;
 
     @Step("Получить список пользователей со страницы: {0}")
-    public List<User> getUsersPage(int page) {
+    public List<User> getUsers(int page) {
         return given()
                 .queryParam("limit", page)
                 .when()
@@ -51,18 +55,30 @@ public class ReqResService {
         softly.assertAll();
     }
 
+    @Step("Создать пользователя")
+    public UserWithJob getUserWithJob(DataForCreateUser data) {
+        return given()
+                .body(data)
+                .when()
+                .post(baseUrl + usersEndpoint)
+                .then()
+                .statusCode(201)
+                .extract().as(new TypeRef<UserWithJob>() {
+                });
+    }
+
+    @Step("Проверить, что у созданного пользователя правильное имя")
+    public ReqResService checkUserName(DataForCreateUser data, UserWithJob user) {
+        assertThat(data.getName())
+                .as("Не совпадают имена пользователя: " + data.getName() + " и :" + user.getName())
+                .isEqualTo(user.getName());
+        return this;
+    }
+
+    @Step("Проверить, что у созданного пользователя правильная профессия")
+    public void checkUserJob(DataForCreateUser data, UserWithJob user) {
+        assertThat(data.getJob())
+                .as("Не совпадает профессия пользователя: " + data.getJob() + " и :" + user.getJob())
+                .isEqualTo(user.getJob());
+    }
 }
-// Метод для выполнения POST запроса
-
-
-// Подключить нужные property из application.yaml через Spring - @Value
-
-
-// Создать здесь методы (аннотированные @Step) для GET и POST запросов, используя REST Assured
-
-// Здесь же можно сделать и другие шаги с проверками
-// В методах для GET и POST запросов, а также в методах с проверками можно возвращать - return this, и в тестах вызывать их по цепочке
-
-// Либо свой вариант
-
-

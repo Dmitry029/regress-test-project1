@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class User {
-    private int id;
-    private String email;
-    private String first_name;
-    private String last_name;
-    private String avatar;
+public class UserWithJob {
+    private String name;
+    private String job;
+    private String id;
+    private String createdAt;
 }
