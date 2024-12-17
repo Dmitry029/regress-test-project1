@@ -6,7 +6,6 @@ import org.assertj.core.api.SoftAssertions;
 import org.example.models.DataForCreateUser;
 import org.example.models.User;
 import org.example.models.UserWithJob;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,21 +13,21 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Аннотация @Service используется для обозначения классов в слое сервисов. Это особый случай @Component, который
+ * имеет больший семантический вес. Использование @Service вместо @Component может улучшить читаемость кода, указывая,
+ * что класс служит определенной бизнес-логике.
+ */
 @Service
 public class ReqResService {
     private final SoftAssertions softly = new SoftAssertions();
-    @Value("${rest-assured.base-url}")
-    private String baseUrl;
-
-    @Value("${rest-assured.users-endpoint}")
-    private String usersEndpoint;
 
     @Step("Получить список пользователей со страницы: {0}")
     public List<User> getUsers(int page) {
         return given()
                 .queryParam("limit", page)
                 .when()
-                .get(baseUrl + usersEndpoint)
+                .get()
                 .then()
                 .statusCode(200)
                 .extract().jsonPath().getList("data", User.class);
@@ -60,7 +59,7 @@ public class ReqResService {
         return given()
                 .body(data)
                 .when()
-                .post(baseUrl + usersEndpoint)
+                .post()
                 .then()
                 .statusCode(201)
                 .extract().as(new TypeRef<UserWithJob>() {

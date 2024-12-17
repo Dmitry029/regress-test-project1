@@ -87,11 +87,12 @@
                     </includes>
                 </configuration>
                 <dependencies>
-                    <dependency>
+                   <!-- https://issues.apache.org/jira/browse/SUREFIRE-1951 -->
+                   <!-- <dependency>
                         <groupId>org.junit.platform</groupId>
                         <artifactId>junit-platform-surefire-provider</artifactId>
                         <version>1.2.0</version>
-                    </dependency>
+                    </dependency> -->
                     <dependency>
                         <groupId>org.aspectj</groupId>
                         <artifactId>aspectjweaver</artifactId>

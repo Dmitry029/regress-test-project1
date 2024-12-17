@@ -1,4 +1,3 @@
 rest-assured:
   base-url: "https://reqres.in"
   users-endpoint: "/api/users"
-# Определить здесь параметры для целевого url и эндпоинта users
