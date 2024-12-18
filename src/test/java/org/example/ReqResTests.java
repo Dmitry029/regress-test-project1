@@ -19,7 +19,6 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-@Feature("Тестовое задание Костюченко Д")
 @SpringBootTest(classes = AtConfig.class)
 public class ReqResTests {
 
@@ -38,8 +37,8 @@ public class ReqResTests {
 
     @ParameterizedTest(name = "Создание пользователя - {0} и проверка правильности заполнения полей")
     @MethodSource("provideDataForCreateUser")
-    void createUser(DataForCreateUser data) {
-        UserWithJob user = reqResService.getUserWithJob(data);
+    void checkUserCreation(DataForCreateUser data) {
+        UserWithJob user = reqResService.createUserWithJob(data);
         reqResService
                 .checkUserName(data, user)
                 .checkUserJob(data, user);

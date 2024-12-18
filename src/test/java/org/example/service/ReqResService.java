@@ -55,7 +55,7 @@ public class ReqResService {
     }
 
     @Step("Создать пользователя")
-    public UserWithJob getUserWithJob(DataForCreateUser data) {
+    public UserWithJob createUserWithJob(DataForCreateUser data) {
         return given()
                 .body(data)
                 .when()
