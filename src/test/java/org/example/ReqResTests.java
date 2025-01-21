@@ -33,6 +33,7 @@ public class ReqResTests {
         reqResService
                 .checkEmailFieldIsNotNull(users)
                 .checkLastNameFieldIsNotNull(users);
+        
     }
 
     @ParameterizedTest(name = "Создание пользователя - {0} и проверка правильности заполнения полей")
